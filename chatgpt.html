@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>HolpAI</title>
+    <style>
+        body { margin: 0; background: #0b0b0b; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .input-area { background: #d9d9d9; padding: 10px 20px; border-radius: 25px; width: 80%; max-width: 400px; margin-top: 20px; }
+        input { border: none; background: transparent; width: 100%; outline: none; font-size: 16px; }
+        .msg { margin-bottom: 10px; padding: 10px; border-radius: 10px; background: #333; }
+    </style>
+</head>
+<body>
+    <h1>Ласкаво просимо в HolpAI</h1>
+    <div id="chat"></div>
+    <div class="input-area"><input type="text" id="in" placeholder="Напиши щось..."></div>
+    <script>
+        const key = 'AIzaSyCe_t2kPNuMt2qLdbTVdlZkBu3gOKP9G5Q';
+        document.getElementById('in').addEventListener('keypress', async (e) => {
+            if(e.key === 'Enter') {
+                const text = e.target.value;
+                e.target.value = 'Зачекайте...';
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({contents: [{parts: [{text: text}]}]})
+                });
+                const data = await res.json();
+                alert("HolpAI: " + data.candidates[0].content.parts[0].text);
+                e.target.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
